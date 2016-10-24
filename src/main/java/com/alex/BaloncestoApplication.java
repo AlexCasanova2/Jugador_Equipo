@@ -1,5 +1,6 @@
 package com.alex;
 
+import com.alex.service.EquipoService;
 import com.alex.service.JugadorService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -14,5 +15,9 @@ public class BaloncestoApplication {
 
 		JugadorService jugadorService= context.getBean(JugadorService.class);
 		jugadorService.testJugadores();
+
+		EquipoService equipoService= context.getBean(EquipoService.class);
+		equipoService.testEquipo();
 	}
 }
+

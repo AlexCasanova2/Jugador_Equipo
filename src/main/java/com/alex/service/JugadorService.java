@@ -61,5 +61,10 @@ public class JugadorService {
         System.out.println("Nacidos antes de la fecha señalada");
         System.out.println(jugadorRepository.findByFechaNacimientoBefore(LocalDate.of(2000, 2, 10)));
 
+        System.out.println("Encontrar jugadores a partir del equipo");
+        System.out.println(jugadorRepository.findByEquipoNombre("Lakers"));
+        System.out.println("Jugadores de un Equipo que jueguen en la misma posición");
+        System.out.println(jugadorRepository.findByEquipoNombreAndPosicion("Cleveland Cavaliers","Base"));
+
     }
 }

@@ -13,9 +13,10 @@ public class EquipoService {
 
         System.out.println("Encontrar equipos por localidad");
         System.out.println(equipoRepository.findByLocalidad("LA"));
-        System.out.println("23432");
-        System.out.println(equipoRepository.findByJugadoresEquipoNombre("Lakers"));
 
+
+        System.out.println("Jugador con más canastas de un equipo determinado");
+        System.out.println(equipoRepository.findByJugadorEquipoCanastas("Bulls"));
     }
 
 }

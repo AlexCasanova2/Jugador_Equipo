@@ -3,6 +3,7 @@ package com.alex.Repository;
 import com.alex.domain.Jugador;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 
 import java.time.LocalDate;
@@ -20,11 +21,15 @@ public interface JugadorRepository extends JpaRepository<Jugador, Long>{
     @Query("SELECT AVG (jugador.canastas), AVG(jugador.asistencias), AVG(jugador.rebotes), jugador.posicion FROM Jugador jugador GROUP BY jugador.posicion")
     List<Object[]> findByMediaCanastasRebotesAsistenciasPosicion();
 
-//    @Query("SELECT jugador.posicion, AVG(jugador.canastas), MAX(jugador.canastas), MIN(jugador.canastas)," +
-//            " AVG(jugador.rebotes), MAX (jugador.rebotes), MIN(jugador.rebotes), AVG(jugador.asistencias)," +
-//            " MAX(jugador.asistencias), MIN(jugador.asistencias) FROM Jugador jugador GROUP BY jugador.posicion")
-//    List<Object[]> findByAvgMinMaxOfAllposicion();
 
+  //@Query("SELECT jugador.posicion, AVG(jugador.canastas), MAX(jugador.canastas), MIN(jugador.canastas)," +
+    //      " AVG(jugador.rebotes), MAX (jugador.rebotes), MIN(jugador.rebotes), AVG(jugador.asistencias)," +
+      //     " MAX(jugador.asistencias), MIN(jugador.asistencias) FROM Jugador jugador GROUP BY jugador.posicion")
+   //List<Object[]> findByAvgMinMaxOfAllposicion();
+
+
+    List<Jugador> findByEquipoNombre(String nombre);
+    List<Jugador> findByEquipoNombreAndPosicion(String nombre, String posicion);
 
 
 }

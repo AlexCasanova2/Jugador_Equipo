@@ -14,6 +14,10 @@ public interface EquipoRepository extends JpaRepository<Equipo, Long>{
 
 
     List<Equipo> findByLocalidad(String Localidad);
-    @Query ("SELECT jugador FROM Jugador jugador Equipo equipo WHERE equipo.id = jugador.equipo AND equipo.nombre = :equipoNombre")
-    List<Jugador> findByJugadoresEquipoNombre(@Param("equipoNombre") String Nombre);
+
+
+
+
+    @Query ("SELECT (jugador) FROM Jugador jugador WHERE jugador.equipo.nombre = :equipoNombre order by jugador.canastas desc")
+    List<Jugador> findByJugadorEquipoCanastas(@Param("equipoNombre")String Nombre);
 }
