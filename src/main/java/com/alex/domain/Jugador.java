@@ -1,5 +1,7 @@
 package com.alex.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.time.LocalDate;
 
@@ -10,15 +12,17 @@ public class Jugador {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String nombre;
+    @JsonIgnore
     private LocalDate fechaNacimiento;
     private Integer canastas;
     private Integer asistencias;
     private Integer rebotes;
-    private String posicion;
+    @Enumerated (EnumType.STRING)
+    private Posicion posicion;
     @ManyToOne
     private Equipo equipo;
 
-    public Jugador(String nombre, LocalDate fechaNacimiento, Integer canastas, Integer asistencias, Integer rebotes, String posicion){
+    public Jugador(String nombre, LocalDate fechaNacimiento, Integer canastas, Integer asistencias, Integer rebotes, Posicion posicion){
         this.nombre=nombre;
         this.fechaNacimiento=fechaNacimiento;
         this.canastas=canastas;
@@ -78,11 +82,11 @@ public class Jugador {
         this.rebotes = rebotes;
     }
 
-    public String getPosicion() {
+    public Posicion getPosicion() {
         return posicion;
     }
 
-    public void setPosicion(String posicion) {
+    public void setPosicion(Posicion posicion) {
         this.posicion = posicion;
     }
 

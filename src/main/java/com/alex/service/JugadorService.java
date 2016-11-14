@@ -4,6 +4,7 @@ import com.alex.Repository.EquipoRepository;
 import com.alex.Repository.JugadorRepository;
 import com.alex.domain.Equipo;
 import com.alex.domain.Jugador;
+import com.alex.domain.Posicion;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
@@ -21,12 +22,12 @@ public class JugadorService {
 
     public void testJugadores() {
 
-        Jugador jugador1 = new Jugador("Alex Casanova", LocalDate.of(1995, 11, 15), 221, 454, 432, "Base");
-        Jugador jugador2 = new Jugador("Pepito", LocalDate.of(1892, 5, 12), 25, 36, 76, "Pivot");
-        Jugador jugador3 = new Jugador("Kristian", LocalDate.of(1973, 10, 28), 12, 13, 23, "Base");
-        Jugador jugador4 = new Jugador("Ricard", LocalDate.of(1996,2,4),20,10,4, "Aleron");
-        Jugador jugador5 = new Jugador("Alan", LocalDate.of(1998,4,7),13,7,9, "Pivot");
-        Jugador jugador6 = new Jugador("Kobe", LocalDate.of(1978, 8,23),23,15,34,"Base");
+        Jugador jugador1 = new Jugador("Alex Casanova", LocalDate.of(1995, 11, 15), 221, 454, 432, Posicion.Base);
+        Jugador jugador2 = new Jugador("Pepito", LocalDate.of(1892, 5, 12), 25, 36, 76, Posicion.Alero);
+        Jugador jugador3 = new Jugador("Kristian", LocalDate.of(1973, 10, 28), 12, 13, 23, Posicion.Base);
+        Jugador jugador4 = new Jugador("Ricard", LocalDate.of(1996,2,4),20,10,4, Posicion.Alero);
+        Jugador jugador5 = new Jugador("Alan", LocalDate.of(1998,4,7),13,7,9, Posicion.Pivot);
+        Jugador jugador6 = new Jugador("Kobe", LocalDate.of(1978, 8,23),23,15,34, Posicion.Base);
 
         Equipo equipo1 = new Equipo("Bulls","Chicago",LocalDate.of(1966,10,2));
         equipoRepository.save(equipo1);
@@ -57,14 +58,14 @@ public class JugadorService {
         System.out.println("Asistencias dentro del rango: 10-20");
         System.out.println(jugadorRepository.findByAsistenciasBetween(10,20));
         System.out.println("Posicion especifica");
-        System.out.println(jugadorRepository.findByPosicion("Base"));
+        System.out.println(jugadorRepository.findByPosicion(Posicion.Base));
         System.out.println("Nacidos antes de la fecha señalada");
         System.out.println(jugadorRepository.findByFechaNacimientoBefore(LocalDate.of(2000, 2, 10)));
 
         System.out.println("Encontrar jugadores a partir del equipo");
         System.out.println(jugadorRepository.findByEquipoNombre("Lakers"));
         System.out.println("Jugadores de un Equipo que jueguen en la misma posición");
-        System.out.println(jugadorRepository.findByEquipoNombreAndPosicion("Cleveland Cavaliers","Base"));
+        System.out.println(jugadorRepository.findByEquipoNombreAndPosicion("Cleveland Cavaliers",Posicion.Base));
 
     }
 }

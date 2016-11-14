@@ -1,9 +1,15 @@
 package com.alex.controller;
 
+import com.alex.Repository.EquipoRepository;
 import com.alex.Repository.JugadorRepository;
 import com.alex.controller.DTO.EstadisticasPosicion;
 import com.alex.domain.Jugador;
+import com.alex.domain.Equipo;
+import com.alex.domain.Posicion;
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.ListMultimap;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,6 +21,7 @@ public class jugadorController {
 
     @Autowired
     private JugadorRepository jugadorRepository;
+    private EquipoRepository equipoRepository;
 
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
@@ -22,15 +29,21 @@ public class jugadorController {
         return jugadorRepository.save(jugador);
     }
 
-    @RequestMapping(method = RequestMethod.GET)
-    public List<Jugador> findAll() {
-        return jugadorRepository.findAll();
-    }
+
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public Jugador findById(@PathVariable Long id) {
         Jugador jugador = jugadorRepository.findOne(id);
         return jugador;
+    }
+
+
+    @RequestMapping(value = "/{id}")
+    public responseEntity <Jugador>(PathVariable Long id) {
+        if(jugador!=null){
+            return
+        }
+
     }
 
     @RequestMapping(value = "/byAsitencias{num}", method = RequestMethod.GET)
@@ -75,6 +88,7 @@ public class jugadorController {
         Map<String, EstadisticasPosicion> estadisticasPosicionMap = new HashMap<>();
 
         estadisticasPosiciones.forEach(estadisticasPosicion -> {
+
             EstadisticasPosicion aux = new EstadisticasPosicion();
             aux.setPosicion((String) estadisticasPosicion[0]);
             aux.setMinCanastas((Integer) estadisticasPosicion[1]);
@@ -86,4 +100,56 @@ public class jugadorController {
 
         return estadisticasPosicionMap;
     }
+
+
+    @GetMapping("/byPosicionAllJugadores")
+    public Map <Posicion,Collection<Jugador>>findByAllPosiciones(){
+        List<Jugador> jugadores = jugadorRepository.findAll();
+        ListMultimap<Posicion, Jugador> JugadorMultiMap = ArrayListMultimap.create();
+
+        jugadores.forEach(jugador ->
+        JugadorMultiMap.put(jugador.getPosicion(),jugador));
+
+        return JugadorMultiMap.asMap();
+    }
+
+
+    @GetMapping("/byLocalidadAllEquipos")
+    public Map<String,Collection<Equipo>>findByAllLocalidades(){
+        List<Equipo> equipos = equipoRepository.findAll();
+        ListMultimap<String, Equipo> EquipoMultiMap = ArrayListMultimap.create();
+
+        equipos.forEach(equipo ->
+        EquipoMultiMap.put(equipo.getLocalidad(),equipo));
+
+        return EquipoMultiMap.asMap();
+
+    }
+
+    @GetMapping
+    public List<Jugador> findAllOrderBy(
+            @RequestParam(
+                    name="orderBy", required=false) String orderBy,
+            @RequestParam(
+                    name="direccion", defaultValue = "ASC") String direccion
+            ){
+
+        if(orderBy!=null){
+            Sort sort;
+            if(direccion.equals("ASC")) {
+                sort = new Sort(Sort.Direction.ASC,orderBy);
+                //return jugadorRepository.findAll(new Sort(Sort.Direction.DESC, orderBy));
+            }
+            else{
+                sort= new Sort(Sort.Direction.DESC,orderBy);
+            }
+        }
+        return jugadorRepository.findAll(sort);
+    }
+
+
+
+
+
+
 }
