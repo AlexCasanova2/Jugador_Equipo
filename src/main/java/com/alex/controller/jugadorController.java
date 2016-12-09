@@ -3,17 +3,23 @@ package com.alex.controller;
 import com.alex.Repository.EquipoRepository;
 import com.alex.Repository.JugadorRepository;
 import com.alex.controller.DTO.EstadisticasPosicion;
+import com.alex.domain.HeaderUtil;
 import com.alex.domain.Jugador;
 import com.alex.domain.Equipo;
 import com.alex.domain.Posicion;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
+import com.sun.xml.internal.ws.client.sei.ResponseBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/jugadores")
@@ -25,8 +31,14 @@ public class jugadorController {
 
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
-    public Jugador crearJugador(@RequestBody Jugador jugador) {
-        return jugadorRepository.save(jugador);
+    public ResponseEntity<Jugador> crearJugador(@RequestBody Jugador jugador) throws URISyntaxException {
+        if(jugador.getId()!=null){
+            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("jugador","idexists","El jugador no puede tener esta ID")).body(null);
+        }
+        Jugador resultado= jugadorRepository.save(jugador);
+       return ResponseEntity.created(new URI("/jugadores/" + resultado.getId()))
+               .headers(HeaderUtil.createEntityCreationAlert("jugador",resultado.getId().toString()))
+               .body(resultado);
     }
 
 
@@ -38,13 +50,13 @@ public class jugadorController {
     }
 
 
-    @RequestMapping(value = "/{id}")
-    public responseEntity <Jugador>(PathVariable Long id) {
-        if(jugador!=null){
-            return
-        }
-
-    }
+//    @RequestMapping(value = "/{id}")
+//    public responseEntity <Jugador>(PathVariable Long id) {
+//        if(jugador!=null){
+//            return
+//        }
+//
+//    }
 
     @RequestMapping(value = "/byAsitencias{num}", method = RequestMethod.GET)
     public List<Jugador> findByAsistenciasGreaterThan(@PathVariable Integer num) {
@@ -143,13 +155,22 @@ public class jugadorController {
             else{
                 sort= new Sort(Sort.Direction.DESC,orderBy);
             }
+            return jugadorRepository.findAll(sort);
         }
-        return jugadorRepository.findAll(sort);
+        return jugadorRepository.findAll();
     }
 
-
+    @GetMapping("/GroupByPosition")
+    public Map<Posicion, List<Jugador>> getJugadoresGroupByPosicion(){
+               return jugadorRepository
+                              .findAll()
+                              .parallelStream()
+                              .collect(Collectors.groupingBy(Jugador::getPosicion));
+          }
 
 
 
 
 }
+
+
